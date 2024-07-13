@@ -1,5 +1,7 @@
 package dev.kamal.product_service.dtos;
 
+import dev.kamal.product_service.models.Category;
+import dev.kamal.product_service.models.Product;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,16 +15,19 @@ public class FakeStoreDto {
     private String image;
     private String category;
 
-    public ProductResponseDto toProductResponseDto(){
-        ProductResponseDto productResponseDto = new ProductResponseDto();
-        productResponseDto.setId(id);
-        productResponseDto.setTitle(title);
-        productResponseDto.setDescription(description);
-        productResponseDto.setPrice(price);
-        productResponseDto.setImage(image);
-        productResponseDto.setCategory(category);
+    public Product toProduct(){
+        Product product = new Product();
+        product.setId(id);
+        product.setTitle(title);
+        product.setDescription(description);
+        product.setPrice(price);
+        product.setImageUrl(image);
+        Category categoryObj = new Category();
+        categoryObj.setTitle(category);
 
-        return productResponseDto;
+        product.setCategory(categoryObj);
+
+        return product;
 
     }
 }

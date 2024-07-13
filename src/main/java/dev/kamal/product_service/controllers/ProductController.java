@@ -1,34 +1,76 @@
 package dev.kamal.product_service.controllers;
 
+import dev.kamal.product_service.dtos.ErrorDto;
 import dev.kamal.product_service.dtos.ProductResponseDto;
+import dev.kamal.product_service.exceptions.ProductNotFoundException;
 import dev.kamal.product_service.models.Product;
 import dev.kamal.product_service.services.ProductService;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-public class ProductController {
+import java.util.ArrayList;
+import java.util.List;
 
-    private ProductService productService;
+    @RestController
+    public class ProductController {
 
-    public ProductController(ProductService productService){
-        this.productService = productService;
+        private ProductService productService;
+        private ModelMapper modelMapper;
+
+        public ProductController(ProductService productService,
+                                 ModelMapper modelMapper){
+            this.modelMapper = modelMapper;
+            this.productService = productService;
     }
 
     @GetMapping("/products/{id}")
-    public ProductResponseDto getProductDetails(@PathVariable("id") int productId){
-        return productService.getSingleProduct(productId);
+    public ProductResponseDto getProductDetails(@PathVariable("id") int productId)
+    throws ProductNotFoundException {
+        Product product = productService.getSingleProduct(productId);
+        return convertToProductResponseDto(product);
+    }
+
+    @GetMapping("/products")
+    public List<ProductResponseDto> getAllProducts(){
+        List<Product> products = productService.getAllProducts();
+        List<ProductResponseDto> productResponseDtos = new ArrayList<>();
+        for(Product product : products){
+            productResponseDtos.add(convertToProductResponseDto(product));
+        }
+        return productResponseDtos;
     }
 
     @PostMapping("/products")
-    public ProductResponseDto createNewProduct(@RequestBody ProductResponseDto productRequestDto){
-          return productService.addProduct(
+    public ResponseEntity<ProductResponseDto> createNewProduct(@RequestBody ProductResponseDto productRequestDto){
+          Product product = productService.addProduct(
                   productRequestDto.getTitle(),
                   productRequestDto.getDescription(),
                   productRequestDto.getImage(),
                   productRequestDto.getCategory(),
                   productRequestDto.getPrice()
           );
+
+           // return convertToProductResponseDto(product);
+          ProductResponseDto productResponseDto = convertToProductResponseDto(product);
+          return new ResponseEntity<>(productResponseDto, HttpStatus.CREATED);
     }
+
+    private ProductResponseDto convertToProductResponseDto(Product product){
+        String categoryTitle = product.getCategory().getTitle();
+        ProductResponseDto productResponseDto = modelMapper.map(product, ProductResponseDto.class);
+        productResponseDto.setCategory(categoryTitle);
+        return productResponseDto;
+    }
+
+//    // Add Exception Handler
+//    @ExceptionHandler(ProductNotFoundException.class)
+//    public ResponseEntity<ErrorDto> handleProductNotFoundException (ProductNotFoundException productNotFoundException){
+//            ErrorDto errorDto = new ErrorDto();
+//            errorDto.setMessage(productNotFoundException.getMessage());
+//            return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+//    }
 
 
 }
