@@ -1,6 +1,7 @@
 package dev.kamal.product_service.controllers;
 
 import dev.kamal.product_service.dtos.ErrorDto;
+import dev.kamal.product_service.dtos.ProductRequestDto;
 import dev.kamal.product_service.dtos.ProductResponseDto;
 import dev.kamal.product_service.exceptions.ProductNotFoundException;
 import dev.kamal.product_service.models.Product;
@@ -26,7 +27,7 @@ import java.util.List;
     }
 
     @GetMapping("/products/{id}")
-    public ProductResponseDto getProductDetails(@PathVariable("id") int productId)
+    public ProductResponseDto getProductDetails(@PathVariable("id") Long productId)
     throws ProductNotFoundException {
         Product product = productService.getSingleProduct(productId);
         return convertToProductResponseDto(product);
@@ -63,6 +64,35 @@ import java.util.List;
             Product product = productService.deleteProduct(productId);
             ProductResponseDto productResponseDto = convertToProductResponseDto(product);
             return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
+    }
+
+
+    @PatchMapping("/products/{id}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable("id") Long productId,
+                                                            @RequestBody ProductRequestDto productRequestDto)
+            throws ProductNotFoundException {
+        Product product = productService.updateProduct(productId,
+                productRequestDto.getTitle(),
+                productRequestDto.getDescription(),
+                productRequestDto.getImage(),
+                productRequestDto.getCategory(),
+                productRequestDto.getPrice() );
+        ProductResponseDto productResponseDto = convertToProductResponseDto(product);
+        return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
+    }
+
+    @PutMapping("/products/{id}")
+    public ResponseEntity<ProductResponseDto> replaceProduct(@PathVariable("id") Long productId,
+                                                             @RequestBody ProductRequestDto productRequestDto)
+            throws ProductNotFoundException {
+        Product product = productService.replaceProduct(productId,
+                productRequestDto.getTitle(),
+                productRequestDto.getDescription(),
+                productRequestDto.getImage(),
+                productRequestDto.getCategory(),
+                productRequestDto.getPrice() );
+        ProductResponseDto productResponseDto = convertToProductResponseDto(product);
+        return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
     }
 
     private ProductResponseDto convertToProductResponseDto(Product product){

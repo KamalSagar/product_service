@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ProductService {
 
-    public Product getSingleProduct(long productId) throws ProductNotFoundException;
+    public Product getSingleProduct(Long productId) throws ProductNotFoundException;
     public List<Product> getAllProducts();
     public Product addProduct(
             String title,
@@ -16,5 +16,19 @@ public interface ProductService {
             String imageUrl,
             String category,
             double price);
-    public Product deleteProduct(long productId) throws ProductNotFoundException;
+    public Product deleteProduct(Long productId) throws ProductNotFoundException;
+
+    public Product updateProduct(Long productId,
+                                 String title,
+                                 String description,
+                                 String imageUrl,
+                                 String category,
+                                 double price) throws ProductNotFoundException;
+
+    public Product replaceProduct(Long productId,
+                                  String title,
+                                  String description,
+                                  String imageUrl,
+                                  String category,
+                                  double price) throws ProductNotFoundException;
 }
