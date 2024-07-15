@@ -57,6 +57,14 @@ import java.util.List;
           return new ResponseEntity<>(productResponseDto, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/products/{id}")
+    public ResponseEntity<ProductResponseDto> deleteProduct(@PathVariable("id") long productId)
+    throws ProductNotFoundException {
+            Product product = productService.deleteProduct(productId);
+            ProductResponseDto productResponseDto = convertToProductResponseDto(product);
+            return new ResponseEntity<>(productResponseDto, HttpStatus.OK);
+    }
+
     private ProductResponseDto convertToProductResponseDto(Product product){
         String categoryTitle = product.getCategory().getTitle();
         ProductResponseDto productResponseDto = modelMapper.map(product, ProductResponseDto.class);
