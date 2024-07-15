@@ -7,6 +7,7 @@ import dev.kamal.product_service.exceptions.ProductNotFoundException;
 import dev.kamal.product_service.models.Product;
 import dev.kamal.product_service.services.ProductService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +21,7 @@ import java.util.List;
         private ProductService productService;
         private ModelMapper modelMapper;
 
-        public ProductController(ProductService productService,
+        public ProductController(@Qualifier("selfProductService") ProductService productService,
                                  ModelMapper modelMapper){
             this.modelMapper = modelMapper;
             this.productService = productService;
@@ -48,7 +49,7 @@ import java.util.List;
           Product product = productService.addProduct(
                   productRequestDto.getTitle(),
                   productRequestDto.getDescription(),
-                  productRequestDto.getImage(),
+                  productRequestDto.getImageUrl(),
                   productRequestDto.getCategory(),
                   productRequestDto.getPrice()
           );
@@ -74,7 +75,7 @@ import java.util.List;
         Product product = productService.updateProduct(productId,
                 productRequestDto.getTitle(),
                 productRequestDto.getDescription(),
-                productRequestDto.getImage(),
+                productRequestDto.getImageUrl(),
                 productRequestDto.getCategory(),
                 productRequestDto.getPrice() );
         ProductResponseDto productResponseDto = convertToProductResponseDto(product);
@@ -88,7 +89,7 @@ import java.util.List;
         Product product = productService.replaceProduct(productId,
                 productRequestDto.getTitle(),
                 productRequestDto.getDescription(),
-                productRequestDto.getImage(),
+                productRequestDto.getImageUrl(),
                 productRequestDto.getCategory(),
                 productRequestDto.getPrice() );
         ProductResponseDto productResponseDto = convertToProductResponseDto(product);
