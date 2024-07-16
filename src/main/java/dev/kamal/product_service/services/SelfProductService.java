@@ -92,6 +92,10 @@ public class SelfProductService implements ProductService{
             productInDb.setImageUrl(imageUrl);
         }
 
+        if (price != 0) {
+            productInDb.setPrice(price);
+        }
+
         if(category != null){
             Category categoryfromDb = categoryRepository.findByTitle(category);
             if(categoryfromDb == null){
@@ -105,7 +109,29 @@ public class SelfProductService implements ProductService{
     }
 
     @Override
-    public Product replaceProduct(Long productId, String title, String description, String imageUrl, String category, double price) throws ProductNotFoundException {
-        return null;
+    public Product replaceProduct(Long productId, String title, String description,
+                                  String imageUrl, String category, double price)
+            throws ProductNotFoundException {
+        Product productInDb = productRepository.findByIdIs(productId);
+        if(productInDb == null){
+            throw new ProductNotFoundException(
+                    "Product with id "+ productId + " not found"
+            );
+        }
+
+        productInDb.setTitle(title);
+        productInDb.setDescription(description);
+        productInDb.setImageUrl(imageUrl);
+        productInDb.setPrice(price);
+
+        Category categoryfromDb = categoryRepository.findByTitle(category);
+        if(categoryfromDb == null){
+            Category newCategory = new Category();
+            newCategory.setTitle(category);
+            categoryfromDb = newCategory;
+        }
+        productInDb.setCategory(categoryfromDb);
+
+        return productRepository.save(productInDb);
     }
 }
