@@ -103,7 +103,6 @@ class ProductServiceApplicationTests {
                 System.out.println(product.getTitle());
             }
         }
-
     }
 
 
