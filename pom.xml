@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.kamal</groupId>
     <artifactId>product_service</artifactId>
-    <version>0.0.1-Batman</version>
+    <version>0.0.2-Batman</version>
     <name>product_service</name>
     <description>product_service</description>
     <url/>
