@@ -4,6 +4,7 @@ import dev.kamal.product_service.dtos.FakeStoreDto;
 import dev.kamal.product_service.dtos.ProductResponseDto;
 import dev.kamal.product_service.exceptions.ProductNotFoundException;
 import dev.kamal.product_service.models.Product;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -171,6 +172,10 @@ public class FakeStoreProductService implements ProductService {
                     "Product with id " + productId + " not found" );
         }
         return response.toProduct();
+    }
+
+    public Page<Product> getAllProducts(int pageNumber, int pageSize, String sortParam){
+        return null;
     }
 
 }

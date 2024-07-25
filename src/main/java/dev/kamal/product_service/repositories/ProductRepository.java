@@ -3,6 +3,8 @@ package dev.kamal.product_service.repositories;
 import dev.kamal.product_service.models.Product;
 import dev.kamal.product_service.projections.ProductProjection;
 import dev.kamal.product_service.projections.ProductWithIdAndTitle;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,6 +14,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Product save(Product product);
     List<Product> findAll();
+    Page<Product> findAll(Pageable pageable);
     Product findByIdIs(Long id);
     List<Product> findAllByCategory_Title(String title);
 
