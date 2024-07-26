@@ -10,7 +10,7 @@
     </parent>
     <groupId>dev.kamal</groupId>
     <artifactId>product_service</artifactId>
-    <version>0.0.2-Batman</version>
+    <version>0.0.3-Batman</version>
     <name>product_service</name>
     <description>product_service</description>
     <url/>
@@ -87,7 +87,10 @@
             <artifactId>flyway-mysql</artifactId>
             <version>10.15.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
 
     </dependencies>
 

@@ -42,6 +42,8 @@ public class SelfProductService implements ProductService{
     }
 
     public Page<Product> getAllProducts(int pageNumber, int pageSize, String sortParam){
+        // if direction == ascending
+        // else descending
         return productRepository.findAll(PageRequest.of
                 (pageNumber, pageSize, Sort.by(sortParam).descending()));
     }
@@ -142,5 +144,9 @@ public class SelfProductService implements ProductService{
         productInDb.setCategory(categoryfromDb);
 
         return productRepository.save(productInDb);
+    }
+
+    public void testMethod() {
+        System.out.println("testMethod");
     }
 }
