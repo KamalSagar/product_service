@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 @Component
 @EnableScheduling
 public class ScheduleTasks {
-    @Scheduled(cron = "1 * * * * *")
+    @Scheduled(cron = "1 * * * * * ")
     void sendEmail() {
         // business logic to send email goes here
         //System.out.println("Sending email");

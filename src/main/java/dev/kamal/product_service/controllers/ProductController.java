@@ -1,8 +1,10 @@
 package dev.kamal.product_service.controllers;
 
+import dev.kamal.product_service.authCommons.AuthenticationCommons;
 import dev.kamal.product_service.dtos.ErrorDto;
 import dev.kamal.product_service.dtos.ProductRequestDto;
 import dev.kamal.product_service.dtos.ProductResponseDto;
+import dev.kamal.product_service.dtos.UserDto;
 import dev.kamal.product_service.exceptions.ProductNotFoundException;
 import dev.kamal.product_service.models.Product;
 import dev.kamal.product_service.services.ProductService;
@@ -16,26 +18,51 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-    @RestController
-    @RequestMapping("/products")
-    public class ProductController {
+@RestController
+@RequestMapping("/products")
+public class ProductController {
 
-        private ProductService productService;
-        private ModelMapper modelMapper;
+    private ProductService productService;
+    private ModelMapper modelMapper;
+    private AuthenticationCommons authenticationCommons;
 
-        public ProductController(@Qualifier("fakeStoreProductService") ProductService productService,
-                                 ModelMapper modelMapper){
-            this.modelMapper = modelMapper;
-            this.productService = productService;
+    public ProductController(@Qualifier("selfProductService") ProductService productService,
+                             ModelMapper modelMapper,
+                             AuthenticationCommons authenticationCommons){
+        this.modelMapper = modelMapper;
+        this.productService = productService;
+        this.authenticationCommons = authenticationCommons;
     }
 
     // e.g: localhost:8080/products/5
     @GetMapping("{id}")
-    public ProductResponseDto getProductDetails(@PathVariable("id") Long productId)
-    throws ProductNotFoundException {
-        Product product = productService.getSingleProduct(productId);
-        return convertToProductResponseDto(product);
-    }
+    public ResponseEntity<ProductResponseDto> getProductDetails(@PathVariable("id") Long productId,
+                                                @RequestHeader String authenticationToken)
+        throws ProductNotFoundException {
+            // In order to make this service authenticated, we can pass token
+            // in the input parameter and then we'll have to validate the token
+            // from UserService
+
+            UserDto userDto = authenticationCommons.validateToken(authenticationToken);
+
+            ResponseEntity<ProductResponseDto> response = null;
+
+            if(userDto == null){
+                response = new ResponseEntity<>(
+                        null,
+                        HttpStatus.UNAUTHORIZED
+                );
+                return response;
+            }
+
+            Product product = productService.getSingleProduct(productId);
+            ProductResponseDto productResponseDto = convertToProductResponseDto(product);
+            response = new ResponseEntity<>(
+                    productResponseDto,
+                    HttpStatus.OK
+            );
+            return response;
+        }
 
 //    @GetMapping("/products/all")
 //    public List<ProductResponseDto> getAllProducts(){
